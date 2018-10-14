@@ -31,27 +31,27 @@ tabela = function(a){
 }
 
 #Plotagem da Matriz de Correlação somente para as 16 ultimas características
-png("Matriz_Correlação_N.png")
-corrplot(Cor,type="upper",method="circle")
-dev.off()
+#png("Matriz_Correlação_N.png")
+#corrplot(Cor,type="upper",method="circle")
+#dev.off()
 
 #Plotagem de todos os histogramas de Dispersão
-for(i in 1:228){
-  ggplot(Data_trans,aes(Data_trans[,i])) + geom_histogram(color="black",fill="springgreen2")+theme_gray()+
-  labs(x=names(Data_trans[i]),y="Frequência")
-  ggsave(paste(names(Data_trans[i]),".png"))
-  dev.off()
-}
+#for(i in 1:228){
+  #ggplot(Data_trans,aes(Data_trans[,i])) + geom_histogram(color="black",fill="springgreen2")+theme_gray()+
+  #labs(x=names(Data_trans[i]),y="Frequência")
+  #ggsave(paste(names(Data_trans[i]),".png"))
+  #dev.off()
+#}
 
 #Plotagem Dispersão
-for(i in 209:228){
-  for(j in 209:228){
-    if(i>j){
-      ggplot(Dados,aes(Data_trans[,j],Dados[,i]))+ geom_point(aes(color=y)) +labs(x=names(Data_trans[i]),y=names(Data_trans[j]),colour="outcome")
-      ggsave(paste(names(Dados[i])," vs ",names(Dados[j]),".png"))
-      dev.off()
-    }
-  }
-}
+#for(i in 209:228){
+  #for(j in 209:228){
+    #if(i>j){
+      #ggplot(Dados,aes(Data_trans[,j],Dados[,i]))+ geom_point(aes(color=y)) +labs(x=names(Data_trans[i]),y=names(Data_trans[j]),colour="outcome")
+      #ggsave(paste(names(Dados[i])," vs ",names(Dados[j]),".png"))
+      #dev.off()
+    #}
+  #}
+#}
 
-print(tabela(Data_trans))
+#print(tabela(Data_trans))
