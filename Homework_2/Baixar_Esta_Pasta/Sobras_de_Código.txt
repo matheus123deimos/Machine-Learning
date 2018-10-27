@@ -1,0 +1,163 @@
+cont = 4
+M = c(0)
+R = c(0)
+RS= c(0)
+for(i in 1:238){
+p = lm(y~.,D[1:cont,])
+pred=predict(p,D)
+M[i] = MAE(pred,D$y)
+R[i] = RMSE(pred,D$y)
+RS[i] = R2(pred,D$y)
+cont=cont+4
+}
+
+
+#Função para fazer Análise de média e skeness
+tabela = function(a){
+  k = c(1)
+  h = c(1)
+  j = c(1)
+  l = c(1)
+  for(i in 1:dim(a)[2]){
+    k[i] = names(a)[i]
+    h[i] = round(mean(a[,i]),3) 
+    j[i] = round(sd(a[,i]),3)
+    l[i] = round(skewness(a[,i]),3)
+    }
+  df = data.frame(Var=k,Midia=h,Desv_Pad=j,Skewness=l)
+  return(df)
+}
+
+
+#PCR
+set.seed(20)
+train.control_7 = trainControl(method = "cv",number=5)
+model7 = train(y~.,data=D_treino,method="pcr",trControl=train.control_7,tuneLength = 13,preProc=c("center","scale"))
+
+set.seed(21)
+train.control_8 = trainControl(method = "cv",number=10)
+model8 = train(y~.,data=D_treino,method="pcr",trControl=train.control_8,tuneLength = 13,preProc=c("center","scale"))
+
+model7
+model8
+
+pred11 = predict(model7,D_treino)
+pred12 = predict(model8,D_treino)
+pred13 = predict(model7,D_teste)
+pred14 = predict(model8,D_teste)
+
+#RMSE(pred11,D_treino$y)
+#RMSE(pred12,D_treino$y)
+#RMSE(pred13,D_teste$y)
+#RMSE(pred14,D_teste$y)
+
+#R2(pred11,D_treino$y)
+#R2(pred12,D_treino$y)
+#R2(pred13,D_teste$y)
+#R2(pred14,D_teste$y)
+
+#D13 = data.frame(D_treino$y,pred11)
+#D14 = data.frame(D_treino$y,pred12)
+#D15 = data.frame(D_teste$y,pred13)
+#D16 = data.frame(D_teste$y,pred14)
+
+#png("PCRTreino5fold.png")
+#ggplot(D13,aes(D_treino.y,pred11)) + geom_point(color="blue") + labs(title="PCR_Treino: 5-fold",x="Predito",y="Observado")
+#dev.off()
+#png("PCRTreino10fold.png")
+#ggplot(D14,aes(D_treino.y,pred12)) + geom_point(color="blue") + labs(title="PCR_Treino: 10-fold",x="Predito",y="Observado")
+#dev.off()
+#png("PCRTeste5fold.png")
+#ggplot(D15,aes(D_teste.y,pred13)) + geom_point(color="blue") + labs(title="PCR_Teste: 5-fold",x="Predito",y="Observado")
+#dev.off()
+#png("PCRTeste10fold.png")
+#ggplot(D16,aes(D_teste.y,pred14)) + geom_point(color="blue") + labs(title="PCR_Teste: 10-fold",x="Predito",y="Observado")
+#dev.off()
+
+
+
+
+#PLS
+set.seed(16)
+train.control_3 = trainControl(method = "cv",number=5)
+model3 = train(y~.,data=D_treino,method="pls",trControl=train.control_3,tuneLength = 13,preProc=c("center","scale"))
+
+set.seed(17)
+train.control_4 = trainControl(method = "cv",number=10)
+model4 = train(y~.,data=D_treino,method="pls",trControl=train.control_4,tuneLength = 13,preProc=c("center","scale"))
+
+
+model3
+model4
+
+pred3 = predict(model3,D_treino)
+pred4 = predict(model4,D_treino)
+pred5 = predict(model3,D_teste)
+pred6 = predict(model4,D_teste)
+
+RMSE(pred3,D_treino$y)
+RMSE(pred4,D_treino$y)
+RMSE(pred5,D_teste$y)
+RMSE(pred6,D_teste$y)
+
+R2(pred3,D_treino$y)
+R2(pred4,D_treino$y)
+R2(pred5,D_teste$y)
+R2(pred6,D_teste$y)
+
+D5 = data.frame(D_treino$y,pred3)
+D6 = data.frame(D_treino$y,pred4)
+D7 = data.frame(D_teste$y,pred5)
+D8 = data.frame(D_teste$y,pred6)
+
+png("PLSTreino5fold.png")
+ggplot(D5,aes(D_treino.y,pred3)) + geom_point(color="blue") + labs(title="PLS_Treino: 5-fold",x="Predito",y="Observado")
+dev.off()
+png("PLSTreino10fold.png")
+ggplot(D6,aes(D_treino.y,pred4)) + geom_point(color="blue") + labs(title="PLS_Treino: 10-fold",x="Predito",y="Observado")
+dev.off()
+png("PLSTeste5fold.png")
+ggplot(D7,aes(D_teste.y,pred5)) + geom_point(color="blue") + labs(title="PLS_Teste: 5-fold",x="Predito",y="Observado")
+dev.off()
+png("PLSTeste10fold.png")
+ggplot(D8,aes(D_teste.y,pred6)) + geom_point(color="blue") + labs(title="PLS_Teste: 10-fold",x="Predito",y="Observado")
+dev.off()
+
+#Linear Model
+set.seed(14)
+train.control_1 = trainControl(method = "cv",number=5)
+model1 = train(y~.,data=D_treino,method="lm",trControl=train.control_1,preProc=c("center","scale"))
+set.seed(15)
+train.control_2 = trainControl(method = "cv",number=10)
+model2 = train(y~.,data=D_treino,method="lm",trControl=train.control_2,preProc=c("center","scale"))
+
+p1 = predict(model1,D_treino)
+p2 = predict(model2,D_treino)
+
+model1
+model2
+
+pred1 = predict(model1,D_teste)
+pred2 = predict(model2,D_teste)
+RMSE(pred1,D_teste$y)
+RMSE(pred2,D_teste$y)
+R2(pred1,D_teste$y)
+R2(pred2,D_teste$y)
+
+D1 = data.frame(D_treino$y,p1)
+D2 = data.frame(D_treino$y,p2)
+D3 = data.frame(D_teste$y,pred1)
+D4 = data.frame(D_teste$y,pred2)
+
+png("ModeloLinearTreino5fold.png")
+ggplot(D1,aes(D_treino.y,p1)) + geom_point(color="blue") + labs(title="Modelo_Linear_Treino: 5-fold",x="Predito",y="Observado")
+dev.off()
+png("ModeloLinearTreino10fold.png")
+ggplot(D2,aes(D_treino.y,p2)) + geom_point(color="blue") + labs(title="Modelo_Linear_Treino: 10-fold",x="Predito",y="Observado")
+dev.off()
+png("ModeloLinearTeste5fold.png")
+ggplot(D3,aes(D_teste.y,pred1)) + geom_point(color="blue") + labs(title="Modelo_Linear_Teste: 5-fold",x="Predito",y="Observado")
+dev.off()
+png("ModeloLinearTeste10fold.png")
+ggplot(D4,aes(D_teste.y,pred2)) + geom_point(color="blue") + labs(title="Modelo_Linear_Teste: 10-fold",x="Predito",y="Observado")
+dev.off()
